@@ -1,11 +1,21 @@
 cmake_minimum_required(VERSION 3.10)
-
-# Name your project
 project(PhysarumEngine)
 
-# Specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Tell CMake to build an executable from main.cpp
-add_executable(PhysarumEngine main.cpp)
+# 1. Ask the Operating System to find the graphics libraries you just installed
+find_package(OpenGL REQUIRED)
+find_package(glfw3 REQUIRED)
+
+# 2. Tell CMake to build your executable AND compile the external GLAD C file
+add_executable(PhysarumEngine main.cpp extern/glad/src/glad.c)
+
+# 3. Tell your compiler where to look for the GLAD headers and our Engine.hpp
+target_include_directories(PhysarumEngine PRIVATE
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/extern/glad/include
+)
+
+# 4. Link the OpenGL and GLFW system libraries directly to your engine
+target_link_libraries(PhysarumEngine PRIVATE OpenGL::GL glfw)
